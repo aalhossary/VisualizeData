@@ -72,7 +72,8 @@ def analyze_data_3d():
     alpha = 0.05  # TODO import value from MovementRx
     ref = read_individual_data('./', 'refData')
     roi = np.array([True] * 101)
-    test_name = HOTELLINGS_2
+    # test_name = HOTELLINGS_2
+    test_name = HOTELLINGS
     for id_individual in range(12):
         individual = read_individual_data('./', f'TTA{(id_individual + 1):03}')
         eval_individual_vs_ref(all_data_3d, alpha, id_individual, individual, ref, roi, test_name)
@@ -86,8 +87,8 @@ def analyze_bootstrapped_data_3d():
     alpha = 0.05  # TODO import value from MovementRx
     base_ref = read_individual_data('./', 'refData')
     roi = np.array([True] * 101)
-    test_name = HOTELLINGS_2
-    # test_name = HOTELLINGS
+    # test_name = HOTELLINGS_2
+    test_name = HOTELLINGS
 
     for id_individual in range(20):
         # individual = read_individual_data('./', f'TTA{(id_individual + 1):03}')
@@ -186,8 +187,8 @@ def analyze_data_scalar():
     # patient id, measure, side, joint, dimension, time series
     all_data_scalar = np.empty(shape=(12, 2, 2, 3, 3, 101), dtype=float)
     roi = np.array([True] * 101)
-    test_name = TTEST_2
-    # test_name = TTEST
+    # test_name = TTEST_2
+    test_name = TTEST
     alpha = 0.05
     ref = read_individual_data('./', 'refData')
     for id_individual in range(12):

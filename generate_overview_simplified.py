@@ -89,8 +89,8 @@ def analyze_bootstrapped_data_3d_simplified():
         individual.append(np.vstack([splits[1], splits[1]]))  # at least 2 sets of readings per joint per dimension
         ref.append(np.vstack((splits[0], splits[2])))
 
-    test_name = HOTELLINGS_2
-    # test_name = HOTELLINGS
+    # test_name = HOTELLINGS_2
+    test_name = HOTELLINGS
     singlejoint_data_3d = eval_individual_vs_ref_simplified(alpha, individual, ref, roi, test_name)
 
     return singlejoint_data_3d
