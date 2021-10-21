@@ -40,30 +40,32 @@ def draw_plot(data: np.ndarray, norm, i_measurement, limbs_to_draw, title: str, 
 
     data_selected_measurement_and_limb = data[np.arange(data.shape[0]), i_measurement, limbs_to_draw, ...]
 
-    data_max_per_joint = np.max(np.abs(data_selected_measurement_and_limb), -1, keepdims=False)
-    data_max_per_patient_limb = np.max(np.abs(data_selected_measurement_and_limb), (-1, -2), keepdims=False)
-
-    ax = fig.add_subplot(2, 1, 1)
-    ax = typing.cast(Axes, ax)
-    if percent:
-        ax.yaxis.set_major_formatter(PercentFormatter(1. * NUM_LEVELS_3D / 10))
-    draw_hist(ax, data_max_per_patient_limb, norm, "At least one joint", percent)
-    # ax.set_title(title)
+    abs_data = np.abs(data_selected_measurement_and_limb)
+    abs_data[:, :, ::-1].sort()
+    data_max_per_joint = abs_data[:, :, 20]  # Threshold is 20% at least
+    data_max_per_patient_limb = np.max(data_max_per_joint, -1)
 
     first: Optional[Axes] = None
     for i_joint in range(3):
         if i_joint == 0:
-            first = ax = fig.add_subplot(2, 3, 4 + i_joint)
+            first = ax = fig.add_subplot(2, 3, 1 + i_joint)
             if percent:
-                ax.yaxis.set_major_formatter(PercentFormatter(1. * NUM_LEVELS_3D / 10))
+                ax.yaxis.set_major_formatter(PercentFormatter(0.01428))
         else:
-            ax = fig.add_subplot(2, 3, 4 + i_joint, sharey=first)
+            ax = fig.add_subplot(2, 3, 1 + i_joint, sharey=first)
         ax = typing.cast(Axes, ax)
         draw_hist(ax, data_max_per_joint[:, i_joint], norm, consts.joint[i_joint], percent)
     # ax = fig.add_subplot(2, 1, 2)
     # if percent:
     #     ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
     # draw_hist(ax, data_max_per_joint, norm, "All joints", percent)
+
+    ax = fig.add_subplot(2, 1, 2)
+    ax = typing.cast(Axes, ax)
+    if percent:
+        ax.yaxis.set_major_formatter(PercentFormatter(0.01428))
+    draw_hist(ax, data_max_per_patient_limb, norm, "Limb: At least one joint", percent)
+    # ax.set_title(title)
 
     fig.tight_layout()
     plt.savefig(f"{title}.png")
