@@ -36,8 +36,8 @@ cmap1 = cm.get_cmap('coolwarm', NUM_LEVELS_SCALAR)
 cmap1.set_under(color=under_color)
 norm1 = Normalize(vmin=VMIN_SCALAR, vmax=VMAX_SCALAR)
 
-VMIN_3D = 1
-VMAX_3D = 11
+VMIN_3D = 20
+VMAX_3D = 300
 # VMAX_3D = 50
 NUM_LEVELS_3D = 4
 cmap2 = cm.get_cmap('coolwarm', NUM_LEVELS_3D)
@@ -130,10 +130,12 @@ def eval_individual_vs_ref(out, alpha, id_individual, individual, ref, roi, test
                 spm_t = None
                 if test_name == HOTELLINGS_2:
                     spm_t = test(data_ya, data_yb, roi=roi)
+                    spmi_t = spm_t.inference(alpha)
+                    z = (spmi_t.z / spmi_t.zstar)
                 elif test_name == HOTELLINGS:
                     spm_t = test(data_ya, mu=data_yb.mean(axis=0), roi=roi)
-                spmi_t = spm_t.inference(alpha)
-                z = (spmi_t.z / spmi_t.zstar)
+                    spmi_t = spm_t.inference(alpha)
+                    z = spmi_t.z
                 # print(z)
                 out[id_individual, i_measurement, i_side, i_joint] = z
 
@@ -209,13 +211,15 @@ def analyze_data_scalar():
                             spm_t = test(ref[i_measurement, i_side, i_joint, i_dimension],
                                          individual[i_measurement, i_side, i_joint, i_dimension],
                                          roi=roi)
+                            spmi_t = spm_t.inference(alpha)
+                            z = (spmi_t.z / spmi_t.zstar)
                         elif test_name == TTEST:
                             spm_t = test(ref[i_measurement, i_side, i_joint, i_dimension],
                                          individual[i_measurement, i_side, i_joint, i_dimension].mean(axis=0),
                                          roi=roi)
+                            spmi_t = spm_t.inference(alpha)
+                            z = spmi_t.z
 
-                        spmi_t = spm_t.inference(alpha)
-                        z = (spmi_t.z / spmi_t.zstar)
                         # print(z)
                         all_data_scalar[id_individual, i_measurement, i_side, i_joint, i_dimension] = z
     return all_data_scalar
