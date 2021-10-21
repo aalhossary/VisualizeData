@@ -31,8 +31,8 @@ roi = np.array([True] * 101)
 HOTELLINGS_2 = 'hotellings2'
 HOTELLINGS = 'hotellings'
 
-VMIN_3D = 1
-VMAX_3D = 11
+VMIN_3D = 20
+VMAX_3D = 300
 NUM_LEVELS_3D = 4
 under_color = (0.5, 0.5, 0.5)
 cmap2 = cm.get_cmap('coolwarm', NUM_LEVELS_3D)
@@ -115,7 +115,8 @@ def eval_individual_vs_ref_simplified(alpha, individual, ref, roi, test_name):
         spm_t = test(data_ya, mu=data_yb.mean(axis=0), roi=roi)
 
     spmi_t = spm_t.inference(alpha)
-    z = (spmi_t.z / spmi_t.zstar)
+    # z = (spmi_t.z / spmi_t.zstar)
+    z = spmi_t.z
     print(z)
     return z
 
